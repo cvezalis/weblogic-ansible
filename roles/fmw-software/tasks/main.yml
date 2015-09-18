@@ -1,0 +1,12 @@
+# ==> Install Fussion Middleware Infrastructure
+- name: Create installer directory
+  file: state=directory path={{ mw_installer_folder }} owner=oracle group=oinstall
+- name: Copy Middleware Installer
+  copy: src={{ mw_installer }} dest={{ mw_installer_folder }} owner=oracle group=oinstall
+- name: Copy file for silent installation
+  template: src=silent-weblogic.txt dest={{ mw_installer_folder }} owner=oracle group=oinstall
+- name: Copy OraInst.loc
+  template: src=oraInst.loc dest={{ mw_installer_folder }} owner=oracle group=oinstall
+- name: execute Weblogic installer
+  command: "{{ jdk_folder }}/bin/java -Xms1024m -Xmx1024m -jar {{ mw_installer_folder }}/{{ mw_installer }} -silent -responseFile {{ mw_installer_folder }}/silent-weblogic.txt -invPtrLoc {{ mw_installer_folder }}/oraInst.loc"
+  sudo_user: oracle

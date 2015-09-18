@@ -1,0 +1,26 @@
+# ==> Configure Linux
+    - name: Install required libraries
+      yum: name={{ item }} state=present
+      with_items: packages_list
+    - name: Disable SELinux
+      selinux: state=disabled
+    - name: Disable Firewall Deamon (firewalld)
+      service: name=firewalld state=stopped enabled=no
+    - name: Change kernel parameters
+      sysctl: name="{{ item.key }}" value="{{ item.value }}" state=present
+      with_dict: kernel_params
+    
+    # ==> Create user and groups
+    - name: Create groups
+      group: name={{ item }} state=present
+      with_items: system_groups
+    - name: Create user
+      user: name=oracle groups=oinstall,oracle password=$6$P7jw3OaWKdR$tRSRPjTey.SPqhyLBxOKbm9k21MEYF6jHDUH2O03RPvISDVnkGqWNg1W6iJqZhqD3ErbdJZqUEuNnEuoAWHWO/
+    
+    # ==> Create Base Directories
+    - name: Create Oracle Home directory
+      file: state=directory path={{ middleware_home }} owner=oracle group=oinstall
+    - name: Create Domain Home directory
+      file: state=directory path={{ domains_home }} owner=oracle group=oinstall
+    - name: Create Applications Home directory
+      file: state=directory path={{ applications_home }} owner=oracle group=oinstall

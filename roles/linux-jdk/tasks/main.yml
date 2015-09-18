@@ -1,0 +1,13 @@
+# ==> Install JDK
+- name: Copy jdk archive to host
+  copy: src={{ jdk_installation_archive }} dest=~/{{ jdk_installation_archive }}
+  args:
+    force: no
+- name: Extract JDK archive
+  command: 'tar -xf ~/{{ jdk_installation_archive }} -C {{ oracle_base }}'
+  args:
+    creates: "{{ jdk_folder }}"
+- name: Change ownership of jdk folder
+  file: path="{{ jdk_folder }}" owner=oracle group=oinstall recurse=yes
+- name: Change entropy device for java
+  command: "sed -i.bak 's/urandom/.\\/urandom/' {{ jdk_folder }}/jre/lib/security/java.security"

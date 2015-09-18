@@ -1,0 +1,52 @@
+# ==> Create Repository in Database
+- name: password response file for repository creation
+  copy: src=passwords.txt dest={{ mw_installer_folder }} owner=oracle group=oinstall
+- name: copy create repository script
+  template: src=create_repo.sh dest={{ mw_installer_folder }} owner=oracle group=oinstall mode=0755
+- name: execute create repository script
+  shell: "{{ mw_installer_folder }}/create_repo.sh"
+    
+# ==> Create new domain
+- name: copy create domain python script
+  template: src=create-domain.py dest={{ mw_installer_folder }} owner=oracle group=oinstall
+- name: Execute create domain script
+  shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/create-domain.py"
+  sudo_user: oracle
+    
+# ==> Start nodemanager
+- name: Create security directoy to Nodemanager Home
+  file: state=directory path={{ nodemanager_home }}/security owner=oracle group=oinstall
+- name: Copy DemoIdentity key store to nodemanager home
+  command: 'cp {{ domain_home }}/security/DemoIdentity.jks {{ nodemanager_home }}/security/DemoIdentity.jks'
+  sudo_user: oracle
+- name: Copy Nodemanager Properties file
+  template: src=nodemanager.properties dest={{ nodemanager_home }}/ owner=oracle group=oinstall
+      
+# ==> Create startup script for nodemanager
+#- name: Copy init.d startup script
+#  template: src=files/nodemgr dest=/etc/init.d/ mode=0755
+- name: Copy nodemanager systemd script
+  template: src=nodemanager.service dest=/etc/systemd/system/ mode=0664
+- name: Enable nodemanager as linux service
+  command: 'systemctl enable nodemanager'
+- name: Start Node Manager
+  command: 'systemctl start nodemanager'
+- name: Waiting for nodemanager to come up
+  wait_for: port=5556 delay=2 timeout=30
+    
+# ==> Start AdminServer
+- name: Create security folder on Admin Server
+  file: state=directory path={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security owner=oracle group=oinstall
+- name: Create boot.properties file
+  template: src=boot.properties dest={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security/ owner=oracle group=oinstall
+- name: Copy Admin Server start-up script
+  template: src=start-admin-server.py dest={{ mw_installer_folder }} owner=oracle group=oinstall mode=0755
+- name: Execute start Admin Server script
+  shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/start-admin-server.py"
+  sudo_user: oracle
+- name: Wait for Admin Server to startup
+  wait_for: port={{ admin_server_port }} delay=2 timeout=60
+  
+# ==> Create Environment Variables for Oracle user
+- name: Creates new .bashrc file with system variables
+  template: src=.bashrc dest=/home/oracle/.bashrc

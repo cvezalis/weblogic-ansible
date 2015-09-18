@@ -1,0 +1,16 @@
+[Unit]
+Description=Node Manager controls the WebLogic Server runtime lifecycle
+After=network.target
+           
+[Service]
+User={{ oracle_user }}
+Group=oinstall
+Type=simple
+ExecStart={{ domain_home }}/bin/startNodeManager.sh >/dev/null 2>/dev/null &
+ExecStop={{ domain_home }}/bin/stopNodeManager.sh >/dev/null 2>/dev/null &
+PIDFile={{ nodemanager_home }}/nodemanager.process.id
+Restart=on-failure
+RestartSec=1
+ 
+[Install]
+WantedBy=default.target
