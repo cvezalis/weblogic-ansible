@@ -1,0 +1,18 @@
+---
+- name: Configure RHEL 7 with WebLogic 12c domain
+  hosts: weblogic
+  sudo: True
+  vars_files:
+    - wls-vars.yml
+    - secrets.yml
+  roles:
+    - role: linux-wls
+    - role: linux-jdk
+    - role: fmw-software
+    - role: fmw-domain
+    - role: fmw-managed-server
+  pre_tasks:
+    # ==> Fix hosts file. Remove hostname from local loop. A workaround for vagrant
+    # adding hostname to local loop
+    - name: fix host file 127.0.0.1 entry
+      lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line='127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4' owner=root group=root mode=0644
