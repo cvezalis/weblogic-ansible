@@ -1,0 +1,24 @@
+oracle_user: 'oracle'
+oracle_group: 'oinstall'
+# Software and configuration main directory
+oracle_base: '/oracle/fmw12.1.3'
+
+jdk_installation_archive: 'jdk-7u85-linux-x64.tar.gz'
+jdk_folder: '{{ oracle_base }}/jdk1.7.0_85'
+
+mw_installer: 'fmw_12.1.3.0.0_infrastructure.jar'
+
+dbserver_name: '192.168.56.11'
+dbserver_port: '1521'
+dbserver_service: 'pdborcl.private'
+repository_prefix: 'wls12c2'
+
+domain_name: 'adf_domain'
+
+node_manager_listen_port: '5556'
+node_manager_listen_address: 'localhost'
+admin_server_hostname: 'localhost'
+admin_server_port: '7001'
+
+managed_server_name: 'adfsrv1'
+managed_server_port: '7003'
