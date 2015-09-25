@@ -3,6 +3,8 @@
   hosts: weblogic
   sudo: True
   vars_files:
+    # User defined variables for infrastructure
+    - infra-vars.yml
     - wls-vars.yml
     - secrets.yml
   roles:
