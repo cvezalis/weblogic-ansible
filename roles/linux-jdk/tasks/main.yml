@@ -11,3 +11,7 @@
   file: path="{{ jdk_folder }}" owner=oracle group=oinstall recurse=yes
 - name: Change entropy device for java
   command: "sed -i.bak 's/urandom/.\\/urandom/' {{ jdk_folder }}/jre/lib/security/java.security"
+- name: Add JAVA_HOME environment variariables in bashrc
+  lineinfile: dest='/home/{{ oracle_user }}/.bashrc' line='export JAVA_HOME={{ jdk_folder }}'
+- name: Add Java bin folder to path in bashrc
+  lineinfile: dest='/home/{{ oracle_user }}/.bashrc' line='export PATH=$PATH:$JAVA_HOME/bin'
