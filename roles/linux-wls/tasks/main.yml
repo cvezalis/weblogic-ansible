@@ -12,10 +12,9 @@
     
     # ==> Create user and groups
     - name: Create groups
-      group: name={{ item }} state=present
-      with_items: system_groups
+      group: name={{ oracle_group }} state=present
     - name: Create user
-      user: name=oracle groups=oinstall,oracle password=$6$P7jw3OaWKdR$tRSRPjTey.SPqhyLBxOKbm9k21MEYF6jHDUH2O03RPvISDVnkGqWNg1W6iJqZhqD3ErbdJZqUEuNnEuoAWHWO/
+      user: name={{ oracle_user }} groups={{ oracle_group }} password={{ oracle_os_user_pass }}
     
     # ==> Create Base Directories
     - name: Create Oracle Home directory
