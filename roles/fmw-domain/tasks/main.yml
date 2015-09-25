@@ -1,26 +1,33 @@
+################################################################################
+# ==> Main Tasks for fmw-domain Role
+# ==> Creates a Domain with Fussion Middleware Infra software
+# ==> Compatible with 12.1.3
+# ==> author: Christos Vezalis
+################################################################################
+
 # ==> Create Repository in Database
 - name: password response file for repository creation
-  copy: src=passwords.txt dest={{ mw_installer_folder }} owner=oracle group=oinstall
+  template: src=passwords.txt dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: copy create repository script
-  template: src=create_repo.sh dest={{ mw_installer_folder }} owner=oracle group=oinstall mode=0755
+  template: src=create_repo.sh dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }} mode=0755
 - name: execute create repository script
   shell: "{{ mw_installer_folder }}/create_repo.sh"
     
 # ==> Create new domain
 - name: copy create domain python script
-  template: src=create-domain.py dest={{ mw_installer_folder }} owner=oracle group=oinstall
+  template: src=create-domain.py dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: Execute create domain script
   shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/create-domain.py"
-  sudo_user: oracle
+  sudo_user: '{{ oracle_user }}'
     
 # ==> Start nodemanager
 - name: Create security directoy to Nodemanager Home
-  file: state=directory path={{ nodemanager_home }}/security owner=oracle group=oinstall
+  file: state=directory path={{ nodemanager_home }}/security owner={{ oracle_user }} group={{ oracle_group }}
 - name: Copy DemoIdentity key store to nodemanager home
   command: 'cp {{ domain_home }}/security/DemoIdentity.jks {{ nodemanager_home }}/security/DemoIdentity.jks'
-  sudo_user: oracle
+  sudo_user: '{{ oracle_user }}'
 - name: Copy Nodemanager Properties file
-  template: src=nodemanager.properties dest={{ nodemanager_home }}/ owner=oracle group=oinstall
+  template: src=nodemanager.properties dest={{ nodemanager_home }}/ owner={{ oracle_user }} group={{ oracle_group }}
       
 # ==> Create startup script for nodemanager
 #- name: Copy init.d startup script
@@ -36,17 +43,19 @@
     
 # ==> Start AdminServer
 - name: Create security folder on Admin Server
-  file: state=directory path={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security owner=oracle group=oinstall
+  file: state=directory path={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security owner={{ oracle_user }} group={{ oracle_group }}
 - name: Create boot.properties file
-  template: src=boot.properties dest={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security/ owner=oracle group=oinstall
+  template: src=boot.properties dest={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security/ owner={{ oracle_user }} group={{ oracle_group }}
 - name: Copy Admin Server start-up script
-  template: src=start-admin-server.py dest={{ mw_installer_folder }} owner=oracle group=oinstall mode=0755
+  template: src=start-admin-server.py dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }} mode=0755
 - name: Execute start Admin Server script
   shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/start-admin-server.py"
-  sudo_user: oracle
+  sudo_user: '{{ oracle_user }}'
 - name: Wait for Admin Server to startup
   wait_for: port={{ admin_server_port }} delay=2 timeout=60
   
 # ==> Create Environment Variables for Oracle user
-- name: Creates new .bashrc file with system variables
-  template: src=.bashrc dest=/home/oracle/.bashrc
+#- name: Creates new .bashrc file with system variables
+#  template: src=.bashrc dest=/home/oracle/.bashrc
+- name: Add Oracle Home environment variables
+  lineinfile: dest='/home/{{ oracle_user }}/.bashrc' line='export ORACLE_HOME={{ middleware_home }}'
