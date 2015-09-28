@@ -15,3 +15,10 @@ The playbook includes the following Ansible Roles:
 - fmw-software: Installs Oracle Fussion Middleware Infrastructure software
 - fmw-domain: Creates a Domain with Fussino Middleware support (Enterprise Manager, JRF, etc)
 - fmw-managed-server: Creates a managed server for host applications
+
+For test the playbook you can Download Vagrant and then run: 
+$ vagrant plugin install vagrant-hostmanager
+$ vagrant up
+$ ansible-playbook weblogic-fmw-domain.yml
+
+When the playbook finishes execution you can connect to weblogic server using wls12c1.private:7001/console.
