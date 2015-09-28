@@ -1,25 +1,31 @@
+################################################################################
+# ==> Task for linux-wls Role for configure a RHEL 7 system with requirements 
+# ==> for fusion middleware infrastructrure installation. Supports version 12.1.3
+# ==> author: Christos Vezalis
+################################################################################
+
 # ==> Configure Linux
-    - name: Install required libraries
-      yum: name={{ item }} state=present
-      with_items: packages_list
-    - name: Disable SELinux
-      selinux: state=disabled
-    - name: Disable Firewall Deamon (firewalld)
-      service: name=firewalld state=stopped enabled=no
-    - name: Change kernel parameters
-      sysctl: name="{{ item.key }}" value="{{ item.value }}" state=present
-      with_dict: kernel_params
-    
-    # ==> Create user and groups
-    - name: Create groups
-      group: name={{ oracle_group }} state=present
-    - name: Create user
-      user: name={{ oracle_user }} groups={{ oracle_group }} password={{ oracle_os_user_pass }}
-    
-    # ==> Create Base Directories
-    - name: Create Oracle Home directory
-      file: state=directory path={{ middleware_home }} owner=oracle group=oinstall
-    - name: Create Domain Home directory
-      file: state=directory path={{ domains_home }} owner=oracle group=oinstall
-    - name: Create Applications Home directory
-      file: state=directory path={{ applications_home }} owner=oracle group=oinstall
+- name: Install required libraries
+  yum: name={{ item }} state=present
+  with_items: packages_list
+- name: Disable SELinux
+  selinux: state=disabled
+- name: Disable Firewall Deamon (firewalld)
+  service: name=firewalld state=stopped enabled=no
+- name: Change kernel parameters
+  sysctl: name="{{ item.key }}" value="{{ item.value }}" state=present
+  with_dict: kernel_params
+
+# ==> Create user and groups
+- name: Create groups
+  group: name={{ oracle_group }} state=present
+- name: Create user
+  user: name={{ oracle_user }} groups={{ oracle_group }} password={{ oracle_os_user_pass }}
+
+# ==> Create Base Directories
+- name: Create Oracle Home directory
+  file: state=directory path={{ middleware_home }} owner={{ oracle_user }} group={{ oracle_group }}
+- name: Create Domain Home directory
+  file: state=directory path={{ domains_home }} owner={{ oracle_user }} group={{ oracle_group }}
+- name: Create Applications Home directory
+  file: state=directory path={{ applications_home }} owner={{ oracle_user }} group={{ oracle_group }}
