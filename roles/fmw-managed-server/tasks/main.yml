@@ -1,19 +1,25 @@
+################################################################################
+# ==> tasks for fmw-managed-server Role. Creates a managed server in an existing
+# ==> Fussion Middleware domain on a weblogic server. Supports 12.1.3 version
+# ==> author: Christos Vezalis
+# ##############################################################################
+
 # ==> Create managed server on Domain
 - name: Copy create managed server script
-  template: src=create-managed.py dest={{ mw_installer_folder }} owner=oracle group=oinstall
+  template: src=create-managed.py dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: Execute create managed server script
   shell: '{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/create-managed.py'
-  sudo_user: oracle
+  sudo_user: '{{ oracle_user }}'
     
 # ==> Start managed server
 - name: Create security folder for managed server
-  file: state=directory path={{ domains_home }}/{{ domain_name }}/servers/{{ managed_server_name }}/security owner=oracle group=oinstall
+  file: state=directory path={{ domains_home }}/{{ domain_name }}/servers/{{ managed_server_name }}/security owner={{ oracle_user }} group={{ oracle_group }}
 - name: Create boot properties file for managed server
-  template: src=boot.properties dest={{ domain_home }}/servers/{{ managed_server_name }}/security/ owner=oracle group=oinstall
+  template: src=boot.properties dest={{ domain_home }}/servers/{{ managed_server_name }}/security/ owner={{ oracle_user }} group={{ oracle_group }}
 - name: Copy Start Managed Server Script
-  template: src=start-managed-server.py dest={{ mw_installer_folder }} owner=oracle group=oinstall
+  template: src=start-managed-server.py dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: Start Managed Server
   shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/start-managed-server.py"
-  sudo_user: oracle
+  sudo_user: '{{ oracle_user }}'
 - name: Wait for Managed Server to startup 
   wait_for: host={{ server_hostname }} port={{ managed_server_port }} delay=2 timeout=30
