@@ -4,7 +4,7 @@ After=network.target
            
 [Service]
 User={{ oracle_user }}
-Group=oinstall
+Group={{ oracle_group }}
 Type=simple
 ExecStart={{ domain_home }}/bin/startNodeManager.sh >/dev/null 2>/dev/null &
 ExecStop={{ domain_home }}/bin/stopNodeManager.sh >/dev/null 2>/dev/null &
