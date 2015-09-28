@@ -1,3 +1,8 @@
+################################################################################
+# ==> tasks for linux-jdk Role that installs JDK in a RHEL 7 system
+# ==> author: Christos Vezalis
+################################################################################
+
 # ==> Install JDK
 - name: Copy jdk archive to host
   copy: src={{ jdk_installation_archive }} dest=~/{{ jdk_installation_archive }}
@@ -8,7 +13,7 @@
   args:
     creates: "{{ jdk_folder }}"
 - name: Change ownership of jdk folder
-  file: path="{{ jdk_folder }}" owner=oracle group=oinstall recurse=yes
+  file: path="{{ jdk_folder }}" owner={{ oracle_user }} group={{ oracle_group }} recurse=yes
 - name: Change entropy device for java
   command: "sed -i.bak 's/urandom/.\\/urandom/' {{ jdk_folder }}/jre/lib/security/java.security"
 - name: Add JAVA_HOME environment variariables in bashrc
