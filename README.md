@@ -7,16 +7,16 @@ Requirements for running the playbook:
 - Configure your environment variables in infra-vars.yml. 
 - Set your passwords in secrets.yml.
 - A running Oracle Database for hosting the repositories is required and sys user password for generates the repositories.
-- A running RHEL 7 system with minimal installation with network configured. (IP address, hostname etc)
+- A running RHEL 7 system with minimal installation with network configured. (IP address, hostname etc).
 
 The playbook includes the following Ansible Roles:
 - linux-wls: Configures the linux system with required packages, kernel settings etc.
-- linux-jdk: Installs Oracle JDK 7
-- fmw-software: Installs Oracle Fussion Middleware Infrastructure software
-- fmw-domain: Creates a Domain with Fussino Middleware support (Enterprise Manager, JRF, etc)
-- fmw-managed-server: Creates a managed server for host applications
+- linux-jdk: Installs Oracle JDK 7.
+- fmw-software: Installs Oracle Fussion Middleware Infrastructure software.
+- fmw-domain: Creates a Domain with Fussino Middleware support (Enterprise Manager, JRF, etc).
+- fmw-managed-server: Creates a managed server for host applications.
 
-For test the playbook you can Download Vagrant and then run: 
+For test the playbook you can download Vagrant and then run: 
 - $ vagrant plugin install vagrant-hostmanager
 - $ vagrant up
 - $ ansible-playbook weblogic-fmw-domain.yml
