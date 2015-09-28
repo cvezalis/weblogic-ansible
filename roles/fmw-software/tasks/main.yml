@@ -1,12 +1,18 @@
+################################################################################
+# ==> Tasks for install Oracle Fussion Middleware Infrastructure software
+# ==> to a RHEL 7 system. Supports version 12.1.3
+# ==> author: Christos Vezalis
+################################################################################
+
 # ==> Install Fussion Middleware Infrastructure
 - name: Create installer directory
-  file: state=directory path={{ mw_installer_folder }} owner=oracle group=oinstall
+  file: state=directory path={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: Copy Middleware Installer
-  copy: src={{ mw_installer }} dest={{ mw_installer_folder }} owner=oracle group=oinstall
+  copy: src={{ mw_installer }} dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: Copy file for silent installation
-  template: src=silent-weblogic.txt dest={{ mw_installer_folder }} owner=oracle group=oinstall
+  template: src=silent-weblogic.txt dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: Copy OraInst.loc
-  template: src=oraInst.loc dest={{ mw_installer_folder }} owner=oracle group=oinstall
+  template: src=oraInst.loc dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
 - name: execute Weblogic installer
   command: "{{ jdk_folder }}/bin/java -Xms1024m -Xmx1024m -jar {{ mw_installer_folder }}/{{ mw_installer }} -silent -responseFile {{ mw_installer_folder }}/silent-weblogic.txt -invPtrLoc {{ mw_installer_folder }}/oraInst.loc"
-  sudo_user: oracle
+  sudo_user: '{{ oracle_user }}'
