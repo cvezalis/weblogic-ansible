@@ -28,3 +28,7 @@ kernel_params:
         net.ipv4.tcp_keepalive_time: 300
         net.ipv4.tcp_keepalive_intvl: 60
         net.ipv4.tcp_keepalive_probes: 10
+soft_no_file: 4096
+hard_no_file: 65536
+soft_nproc: 2047
+hard_nproc: 16384

@@ -1,6 +1,6 @@
 ################################################################################
-# ==> Task for linux-wls Role for configure a RHEL 7 system with requirements 
-# ==> for fusion middleware infrastructrure installation. Supports version 12.1.3
+# ==> Tasks for linux-wls Role for configure a RHEL 7 system with requirements 
+# ==> for Fusion Middleware infrastructrure installation. Supports version 12.1.3
 # ==> author: Christos Vezalis
 ################################################################################
 
@@ -21,6 +21,18 @@
   group: name={{ oracle_group }} state=present
 - name: Create user
   user: name={{ oracle_user }} groups={{ oracle_group }} password={{ oracle_os_user_pass }}
+  
+# ==> Add open file and process limits for oracle user
+- name: Add soft limit number of open files
+  lineinfile: dest=/etc/security/limits.conf line='{{ oracle_user }} soft  nofile  {{ soft_no_file }}'
+- name: Add hard limit for number of open files
+  lineinfile: dest=/etc/security/limits.conf line='{{ oracle_user }} hard  nofile  {{ hard_no_file }}'
+- name: Add soft limit for number of processes
+  lineinfile: dest=/etc/security/limits.conf line='{{ oracle_user }} soft  nproc   {{ soft_nproc }}'
+- name: Add hard limit for number of processes
+  lineinfile: dest=/etc/security/limits.conf line='{{ oracle_user }} hard  nproc   {{ hard_nproc }}'
+- name: Create a shell profile with file and process limits for oracle user
+  template: src=oracle-limits.sh dest=/etc/profile.d/
 
 # ==> Create Base Directories
 - name: Create Oracle Home directory
