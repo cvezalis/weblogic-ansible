@@ -82,4 +82,12 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
+	config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "weblogic-fmw-domain.yml"
+        ansible.inventory_path = "./hosts"
+	ansible.limit = 'all'
+	#ansible.groups = { 
+#		"group1" => ["weblogic"]
+#	}
+    end
 end
