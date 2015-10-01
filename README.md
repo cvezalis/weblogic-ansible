@@ -1,4 +1,8 @@
 # weblogic-ansible
+<!-- Piwik Image Tracker -->
+<img src="http://www.link.net.gr/piwik.php?idsite=1amp;rec=1" style="border:0" alt="" />
+<!-- End Piwik -->
+
 An Ansible Playbook (weblogic-fmw-domain.yml) for install and configure a WebLogic server 12c with 
 Oracle Fusion Middleware software for hosting Oracle Fusion Middleware (for example ADF) applications in Redhat Linux 7 (RHEL/CentOS/Oracle Linux) system.
 This playbook is for version 12.1.3 of WebLogic and Fusion Middleware Infrastructure software.
