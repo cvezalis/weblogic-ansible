@@ -1,6 +1,6 @@
 # weblogic-ansible
 <!-- Piwik Image Tracker -->
-<img src="http://www.link.net.gr/piwik.php?idsite=1amp;rec=1" style="border:0;width:0;height:0" alt="" />
+<img src="http://www.link.net.gr/piwik.php?idsite=1&rec=1" style="border:0;width:0;height:0" alt="" />
 <!-- End Piwik -->
 
 An Ansible Playbook (weblogic-fmw-domain.yml) for install and configure a WebLogic server 12c with 
