@@ -27,6 +27,7 @@ The playbook includes the following Ansible Roles:
 For test the playbook you can download Vagrant and Virtual Box and then run: 
 - $ vagrant plugin install vagrant-hostmanager
 - $ vagrant up
+
 vagrant will provision vm with ansible playbook automatically
 
 When the playbook finishes execution you can connect to weblogic server using wls12c1.private:7001/console.
