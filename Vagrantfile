@@ -67,6 +67,7 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |vb|  
     vb.memory = "4096"
     vb.cpus = 2
+    vb.name = "Weblogic12c-1"
   end
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
   # such as FTP and Heroku are also available. See the documentation at
@@ -80,8 +81,6 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   # config.vm.provision "shell", inline: <<-SHELL
   #   sudo apt-get update
-  #   sudo apt-get install -y apache2
-  # SHELL
 	config.vm.provision "ansible" do |ansible|
         ansible.playbook = "weblogic-fmw-domain.yml"
         ansible.inventory_path = "./hosts"
